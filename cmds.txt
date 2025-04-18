@@ -1,0 +1,25 @@
+sudo systemctl start kafka
+sudo systemctl start zookeeper
+sudo systemctl status kafka
+
+/usr/local/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --topic taxi_raw --partitions 3 --replication-factor 1
+
+/usr/local/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --topic taxi_fare_summary --partitions 3 --replication-factor 1
+
+
+/usr/local/kafka/bin/kafka-topics.sh --create --topic popular_routes --bootstrap-server localhost:9092
+
+/usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+spark-submit \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.3 \
+  --jars ~/jars/mysql-connector-j-8.0.32.jar \
+  fare_summary.py
+
+
+ /usr/local/kafka/bin/kafka-console-consumer.sh   --bootstrap-server localhost:9092   --topic taxi_raw   --from-beginning 
+
+
+rm -rf /tmp/raw_trip_combined_checkpoint
+rm -rf /tmp/fare_summary_combined_checkpoint
+rm -rf /tmp/fare_summary_kafka_checkpoint
