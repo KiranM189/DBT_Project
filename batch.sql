@@ -66,3 +66,21 @@ CREATE TABLE avg_speed_fare_by_hour (
     avg_speed DECIMAL(10, 2)
 );
 
+SELECT
+    hour_bucket AS start_time,
+    DATE_ADD(hour_bucket, INTERVAL 1 HOUR) AS end_time,
+    ROUND(AVG(total_amount), 2) AS avg_fare,
+    ROUND(AVG(trip_distance / (TIMESTAMPDIFF(SECOND, tpep_pickup_datetime, tpep_dropoff_datetime) / 3600.0)), 2) AS avg_speed
+FROM (
+    SELECT 
+        *,
+        DATE_FORMAT(tpep_pickup_datetime, '%Y-%m-%d %H:00:00') AS hour_bucket
+    FROM raw_trip_data
+    WHERE 
+        tpep_pickup_datetime IS NOT NULL AND
+        tpep_dropoff_datetime IS NOT NULL AND
+        TIMESTAMPDIFF(SECOND, tpep_pickup_datetime, tpep_dropoff_datetime) > 0 AND
+        trip_distance > 0
+) AS sub
+GROUP BY hour_bucket
+ORDER BY hour_bucket;

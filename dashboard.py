@@ -418,7 +418,7 @@ if st.session_state.speed_fare:
 
 
 
-    # Create hourly buckets
+    # Create hourly buckets (1 hour = 1 unit)
 
     speed_df["hour_bucket"] = speed_df["start_time"].dt.floor("H")
 
@@ -484,33 +484,17 @@ if st.session_state.speed_fare:
 
         st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
 
-        fare_chart = alt.Chart(hourly_agg).mark_area(
+        fare_chart = alt.Chart(hourly_agg).mark_line(
 
-            line={'color':'#4CAF50', 'size':2},
+            point=True,
 
-            color=alt.Gradient(
-
-                gradient='linear',
-
-                stops=[alt.GradientStop(color='#4CAF50', offset=0),
-
-                       alt.GradientStop(color='#0E1117', offset=1)],
-
-                x1=1,
-
-                x2=1,
-
-                y1=1,
-
-                y2=0
-
-            )
+            color='#4CAF50'
 
         ).encode(
 
             x=alt.X('hours(hour_bucket):O', title='Hour of Day', axis=alt.Axis(labelAngle=0)),
 
-            y=alt.Y('avg_fare:Q', title='Average Fare ($)', scale=alt.Scale(zero=False)),
+            y=alt.Y('avg_fare:Q', title='Average Fare ($)'),
 
             tooltip=['hour_bucket:T', 'avg_fare:Q']
 
@@ -542,33 +526,17 @@ if st.session_state.speed_fare:
 
         st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
 
-        speed_chart = alt.Chart(hourly_agg).mark_area(
+        speed_chart = alt.Chart(hourly_agg).mark_line(
 
-            line={'color':'#2196F3', 'size':2},
+            point=True,
 
-            color=alt.Gradient(
-
-                gradient='linear',
-
-                stops=[alt.GradientStop(color='#2196F3', offset=0),
-
-                       alt.GradientStop(color='#0E1117', offset=1)],
-
-                x1=1,
-
-                x2=1,
-
-                y1=1,
-
-                y2=0
-
-            )
+            color='#2196F3'
 
         ).encode(
 
             x=alt.X('hours(hour_bucket):O', title='Hour of Day', axis=alt.Axis(labelAngle=0)),
 
-            y=alt.Y('avg_speed:Q', title='Average Speed (mph)', scale=alt.Scale(zero=False)),
+            y=alt.Y('avg_speed:Q', title='Average Speed (mph)'),
 
             tooltip=['hour_bucket:T', 'avg_speed:Q']
 
