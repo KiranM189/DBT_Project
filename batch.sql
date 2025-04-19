@@ -58,3 +58,11 @@ SELECT
     ROUND(SUM(total_amount), 2) AS total_total
 FROM raw_trip_data
 GROUP BY DATE(tpep_pickup_datetime);
+
+CREATE TABLE avg_speed_fare_by_hour (
+    start_time DATETIME,
+    end_time DATETIME,
+    avg_fare DECIMAL(10, 2),
+    avg_speed DECIMAL(10, 2)
+);
+

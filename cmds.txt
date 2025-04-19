@@ -1,13 +1,18 @@
-sudo systemctl start kafka
 sudo systemctl start zookeeper
+sudo systemctl start kafka
 sudo systemctl status kafka
 
 /usr/local/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --topic taxi_raw --partitions 3 --replication-factor 1
 
 /usr/local/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --topic taxi_fare_summary --partitions 3 --replication-factor 1
 
-
-/usr/local/kafka/bin/kafka-topics.sh --create --topic popular_routes --bootstrap-server localhost:9092
+/usr/local/kafka/bin/kafka-topics.sh \
+  --create \
+  --topic taxi_speed_fare \
+  --bootstrap-server localhost:9092 \
+  --partitions 1 \
+  --replication-factor 1
+  
 
 /usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 
@@ -17,7 +22,9 @@ spark-submit \
   fare_summary.py
 
 
- /usr/local/kafka/bin/kafka-console-consumer.sh   --bootstrap-server localhost:9092   --topic taxi_raw   --from-beginning 
+ /usr/local/kafka/bin/kafka-console-consumer.sh   --bootstrap-server localhost:9092   --topic taxi_speed_fare   --from-beginning 
+
+/usr/local/kafka/bin/kafka-console-consumer.sh   --bootstrap-server localhost:9092   --topic taxi_fare_summary   --from-beginning 
 
 
 rm -rf /tmp/raw_trip_combined_checkpoint
